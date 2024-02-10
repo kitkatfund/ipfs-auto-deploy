@@ -9,6 +9,10 @@ export class GithubReleaseDetailsRepository extends BaseRepository {
         return this.getAllObjects(this.GITHUB_RELEASE_DETAILS_COLLECTION);
     }
 
+    async getGithubReleaseDetailsByAppUUID(appUUID: string): Promise<GithubReleaseDetails> {
+        return this.getObjectByQuery(this.GITHUB_RELEASE_DETAILS_COLLECTION, { appUUID: appUUID });
+    }
+
     async insertGithubReleaseDetails(GithubReleaseDetails: GithubReleaseDetails): Promise<InsertOneResult> {
         return this.insertObject(this.GITHUB_RELEASE_DETAILS_COLLECTION, GithubReleaseDetails);
     }
