@@ -1,5 +1,6 @@
 import { GithubService } from "./githubService.js";
 import { FastifyInstance } from "fastify";
+import { IPFSDeploymentDetailsRepository } from "../repository/ipfsDeploymentDetailsRepository.js";
 
 export class IPFSAutoDeployService {
     private githubService: GithubService;
@@ -10,7 +11,6 @@ export class IPFSAutoDeployService {
 
     async checkForIPFSDeplymentUpdates() {
         // Check for IPFS Deployment Updates with Github API
-
 
         // Compare the latest IPFS Deployment with the current IPFS Deployment in the database
 
