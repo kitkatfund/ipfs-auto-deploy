@@ -2,13 +2,15 @@ import { GithubService } from "./githubService.js";
 import { FastifyInstance } from "fastify";
 import { CONFIGURED_APPS } from "../utils/config.js";
 import { AppConfig } from "../types/appConfig.js";
+import { PinataCloudService } from "./pinataCloudService.js";
 
 export class IPFSAutoDeployService {
   private githubService: GithubService;
-  GITHUB_RELEASE_DETAILS_COLLECTION = process.env.GITHUB_RELEASE_DETAILS_COLLECTION!;
+  private pinataCloudService: PinataCloudService;
 
   constructor(fastify: FastifyInstance) {
     this.githubService = new GithubService(fastify);
+    this.pinataCloudService = new PinataCloudService();
   }
 
   async checkForIPFSDeplymentUpdates() {
@@ -20,12 +22,18 @@ export class IPFSAutoDeployService {
   }
 
   async checkForAppUpdates(appConfig: AppConfig) {
+
     // Check for IPFS Deployment Updates with Github API
-    const githubCheckResult = await this.githubService.checkGithubForRelaseUpdatesUpdates(appConfig);
-    // If there is an update, use the Pinata SDK to update the deployment and update the database
+    const checkGithubResultResponse = await this.githubService.checkGithubForRelaseUpdatesUpdates(appConfig);
 
-    console.log(githubCheckResult);
-    // If an update was made, update the relevant transform rule on Cloudflare to point to the new IPFS Deployment using the CLoudflare API
+    if (checkGithubResultResponse.hasNewerReleaseAvailable) {
 
+      // If there is an update, use the Pinata SDK to update the deployment and update the database
+      const pinResponse = await this.pinataCloudService.pinNewReleaseToPinata(appConfig, checkGithubResultResponse.fetchedReleaseData!);
+      console.log(pinResponse);
+
+      // If an update was made, update the relevant transform rule on Cloudflare to point to the new IPFS Deployment using the CLoudflare API
+
+    }
   }
 }

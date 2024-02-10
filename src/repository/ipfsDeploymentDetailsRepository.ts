@@ -5,7 +5,7 @@ import { IPFSDeploymentDetails } from "../schema/ipfsDeploymentDetails.js";
 export class IPFSDeploymentDetailsRepository extends BaseRepository {
     IPFS_DEPLOYMENT_DETAILS_COLLECTION = process.env.IPFS_DEPLOYMENT_DETAILS_COLLECTION!;
 
-    async getAllIPFSDeploymentDetailss(): Promise<Array<IPFSDeploymentDetails>> {
+    async getAllIPFSDeploymentDetails(): Promise<Array<IPFSDeploymentDetails>> {
         return this.getAllObjects(this.IPFS_DEPLOYMENT_DETAILS_COLLECTION);
     }
 
