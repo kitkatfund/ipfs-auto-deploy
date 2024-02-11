@@ -3,17 +3,11 @@ import { AppConfig } from "../types/appConfig.js";
 
 
 export class CloudflareService {
-    // private zoneId: string;
-    // private ruleId: string;
-
-    // constructor(appConfig: AppConfig) {        
-    //     this.zoneId = appConfig.cloudflare_zone_id;
-    //     this.ruleId = appConfig.cloudflare_rule_id;
-    // }
 
     async updateTransformRule(appConfig: AppConfig) {
         const options: any = {
             method: 'PATCH',
+            // url: `https://api.cloudflare.com/client/v4/zones/${appConfig.cloudflare_zone_id}/transform/rules/${appConfig.cloudflare_rule_id}`,
             url: `https://dash.cloudflare.com/28cdef9078fb1d33cdb2ced5bfcde39d/kitkat.zone/rules/transform-rules/rewrite-url/66b4ae3a6e7042a886c5fea94aea6154`,
             headers: {  Authorization: `${process.env.CLOUDFLARE_AUTH_TOKEN}` },
             data: {
