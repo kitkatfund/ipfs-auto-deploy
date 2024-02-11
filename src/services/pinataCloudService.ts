@@ -1,13 +1,15 @@
-const pinataSDK = require('@pinata/sdk');
+import axios from "axios";
 import { GithubReleaseDetails } from "../schema/githubReleaseDetails.js";
 import { AppConfig } from "../types/appConfig.js";
 
 
 export class PinataCloudService {
-    private pinata: any
+    private axiosRequestHeaders: any;
 
     constructor() {
-        this.pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_API_SECRET);
+        this.axiosRequestHeaders = {
+            'Authorization': `Bearer ${process.env.PINATA_JWT}`,
+        }
     }
 
     async pinNewReleaseToPinata(appConfig: AppConfig, githubReleaseDetails: GithubReleaseDetails) {
@@ -17,20 +19,33 @@ export class PinataCloudService {
             }
         };
 
-        const pinResponse = await this.pinata.pinByHash(githubReleaseDetails.cidHash, pinataOptions);
+        const requestUrl = `${process.env.PINATA_API_BASE_URL}/pinning/pinByHash`;
+        const requestBody = {
+            hashToPin: githubReleaseDetails.cidHash,
+            ...pinataOptions,
+        };
+        
+        const pinResponse = await axios.post(requestUrl, requestBody , {
+            headers: this.axiosRequestHeaders,
+        
+        });
         console.log(pinResponse);
 
-        if (pinResponse.status === 'pinned') {
+        if (pinResponse.status === 200) {
             return pinResponse;
         }
+
+              
     }
 
-    async unpinOldReleaseByHash(cidHash: string) {
-        const unpinResponse = await this.pinata.unpin(cidHash);
-        console.log(unpinResponse);
+    // async unpinOldReleaseByHash(githubReleaseDetails: GithubReleaseDetails) {
+    //     const unpinResponse = await axios.delete(`${process.env.PINATA_API_BASE_URL}/pinning/unpin/${githubReleaseDetails.cidHash}`, {
+    //         headers: this.axiosRequestHeaders,
+    //     });
+    //     console.log(unpinResponse);
 
-        if (unpinResponse.status === 'unpinned') {
-            return unpinResponse;
-        }
-    }
+    //     if (unpinResponse.status === 200) {
+    //         return unpinResponse;
+    //     }
+    // }
 }

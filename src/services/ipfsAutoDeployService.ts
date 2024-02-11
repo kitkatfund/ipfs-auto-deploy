@@ -3,14 +3,17 @@ import { FastifyInstance } from "fastify";
 import { CONFIGURED_APPS } from "../utils/config.js";
 import { AppConfig } from "../types/appConfig.js";
 import { PinataCloudService } from "./pinataCloudService.js";
+import { CloudflareService } from "./cloudflareService.js";
 
 export class IPFSAutoDeployService {
   private githubService: GithubService;
   private pinataCloudService: PinataCloudService;
+  private cloudflareService: any;
 
   constructor(fastify: FastifyInstance) {
     this.githubService = new GithubService(fastify);
     this.pinataCloudService = new PinataCloudService();
+    this.cloudflareService = new CloudflareService();
   }
 
   async checkForIPFSDeplymentUpdates() {
@@ -33,6 +36,10 @@ export class IPFSAutoDeployService {
       console.log(pinResponse);
 
       // If an update was made, update the relevant transform rule on Cloudflare to point to the new IPFS Deployment using the CLoudflare API
+
+      const transformRule= await this.cloudflareService.updateTransformRule(appConfig);
+      console.log(transformRule);
+
 
     }
   }
