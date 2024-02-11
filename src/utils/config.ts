@@ -7,8 +7,11 @@ const CONFIGURED_APPS: Array<AppConfig> = [
         appName: "Persistence Wallet",
         repoOwner: "persistenceOne",
         repoName: "persistenceWallet",
-        cloudflare_zone_id: "28cdef9078fb1d33cdb2ced5bfcde39d",
-        cloudflare_rule_id: "b916d97a000049699752fd0c330e372f"
+        transformedURL: "https://ipfs.kitkat.zone/test-rule",
+        cloudflareRuleExpression: 'starts_with(http.request.full_uri, "https://ipfs.kitkat.zone/test-rule")',
+        cloudflareZoneId: "02ede70a2c7f92f4fd4cc6f1d7bcaca5",
+        cloudflareRulesetId: "ed8bd75365c4455b877a28add45c0ea5",
+        cloudflareRuleId: "b916d97a000049699752fd0c330e372f"
     },
     // {
     //     appUUID: "0b20687f-9f63-4f8e-9d46-7473cb9ce180",

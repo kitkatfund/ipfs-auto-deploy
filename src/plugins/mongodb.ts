@@ -24,5 +24,5 @@ export default fp<FastifyMongodbOptions>(async (fastify) => {
 
 function createIndices(fastify: FastifyInstance) {
   const selectedDatabase = fastify.mongo.client!.db(process.env.MONGO_DB_NAME!);
-  selectedDatabase.collection(process.env.IPFS_DEPLOYMENT_DETAILS_COLLECTION!).createIndex({ chainConfigId: 1 });
+  selectedDatabase.collection(process.env.GITHUB_RELEASE_DETAILS_COLLECTION!).createIndex({ appUUID: 1 }, { unique: true });
 }

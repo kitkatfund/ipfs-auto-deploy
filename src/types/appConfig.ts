@@ -5,8 +5,11 @@ const AppConfig = Type.Object({
     appName: Type.String(),
     repoOwner: Type.String(),
     repoName: Type.String(),
-    cloudflare_zone_id: Type.String(),
-    cloudflare_rule_id: Type.String(),
+    transformedURL: Type.String(),
+    cloudflareRuleExpression: Type.String(),
+    cloudflareZoneId: Type.String(),
+    cloudflareRulesetId: Type.String(),
+    cloudflareRuleId: Type.String(),
 });
 
 type AppConfig = Static<typeof AppConfig>

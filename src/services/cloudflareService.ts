@@ -1,37 +1,36 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { AppConfig } from "../types/appConfig.js";
+import { GithubReleaseDetails } from "../schema/githubReleaseDetails.js";
 
 
 export class CloudflareService {
 
-    async updateTransformRule(appConfig: AppConfig) {
-        const options: any = {
+    async updateTransformRule(appConfig: AppConfig, githubReleaseDetails: GithubReleaseDetails) {
+        const options: AxiosRequestConfig = {
             method: 'PATCH',
-            // url: `https://api.cloudflare.com/client/v4/zones/${appConfig.cloudflare_zone_id}/transform/rules/${appConfig.cloudflare_rule_id}`,
-            url: `https://dash.cloudflare.com/28cdef9078fb1d33cdb2ced5bfcde39d/kitkat.zone/rules/transform-rules/rewrite-url/66b4ae3a6e7042a886c5fea94aea6154`,
-            headers: {  Authorization: `${process.env.CLOUDFLARE_AUTH_TOKEN}` },
+            url: `${process.env.CLOUDFLARE_API_BASE_URL}/zones/${appConfig.cloudflareZoneId}/rulesets/${appConfig.cloudflareRulesetId}/rules/${appConfig.cloudflareRuleId}`,
+            headers: {
+                'Content-Type': 'application/json', Authorization: `Bearer ${process.env.CLOUDFLARE_AUTH_TOKEN}`
+            },
             data: {
-                // actions: [{ id: 'browser_check', value: 'on' }],
-                // priority: 1,
-                // status: 'active',
-                targets: [
-                    {
-                        constraint: { operator: 'contains', value: '^(https?://)?(([-a-zA-Z0-9*]*\.)+[-a-zA-Z0-9]{2,20})(:(8080|8443|443|80))?(/[\S]+)?$' },
-                        target: 'url'
+                expression: appConfig.cloudflareRuleExpression,
+                action: 'rewrite',
+                action_parameters: {
+                    "uri": {
+                        "path": {
+                            "value": `/ipfs/${githubReleaseDetails.cidHash}`
+                        }
                     }
-                ]
+                },
+                description: `Change the URI of ${appConfig.appName} to the latest CID hash`,
+                enabled: true,
             }
         };
 
-        const transformRule = await axios.patch(options.url, options.data, options.headers);
-        console.log(transformRule);
-
-        // const transformRule = await axios.request(options);
-        // console.log(transformRule);
-
+        const transformRule = await axios.request(options);
 
         if (transformRule.status === 200) {
-            return transformRule;
+            return transformRule.data;
         }
     }
 }
