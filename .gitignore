@@ -65,4 +65,4 @@ dist
 
 *.env
 
-utils/config.ts
+src/utils/config.ts

@@ -22,7 +22,7 @@ export class CloudflareService {
                         }
                     }
                 },
-                description: `Change the URI of ${appConfig.appName} to the latest CID hash`,
+                description: `Transform the URI to the IPFS deployment hash of ${appConfig.appName} v${githubReleaseDetails.version}`,
                 enabled: true,
             }
         };
