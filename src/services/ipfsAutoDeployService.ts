@@ -1,39 +1,52 @@
+import { GithubService } from "./githubService.js";
 import { FastifyInstance } from "fastify";
-import { IPFSDeploymentDetailsRepository } from "../repository/ipfsDeploymentDetailsRepository.js";
-import { Octokit } from "@octokit/core";
-
+import { CONFIGURED_APPS } from "../utils/config.js";
+import { AppConfig } from "../types/appConfig.js";
+import { PinataCloudService } from "./pinataCloudService.js";
+import { CloudflareService } from "./cloudflareService.js";
+import { InternalNotificationsService } from "./internalNotificationService.js";
 
 export class IPFSAutoDeployService {
-    private ipfsDeploymentDetailsRepository: IPFSDeploymentDetailsRepository;
+  private githubService: GithubService;
+  private pinataCloudService: PinataCloudService;
+  private cloudflareService: CloudflareService;
+  private internalNotificationsService: InternalNotificationsService;
 
-    constructor(fastify: FastifyInstance) {
-        this.ipfsDeploymentDetailsRepository = new IPFSDeploymentDetailsRepository(fastify);
+  constructor(fastify: FastifyInstance) {
+    this.githubService = new GithubService(fastify);
+    this.pinataCloudService = new PinataCloudService();
+    this.cloudflareService = new CloudflareService();
+    this.internalNotificationsService = new InternalNotificationsService();
+  }
+
+  async checkForIPFSDeplymentUpdates() {
+
+    // Iterate on supported Apps
+    for (const app of CONFIGURED_APPS) {
+      await this.checkForAppUpdates(app);
     }
+  }
 
-    async checkForIPFSDeplymentUpdates() {
-        // Check for IPFS Deployment Updates with Github API
-    
-            const octokit = new Octokit({
-                auth: process.env.GITHUB_AUTH_TOKEN,
-              })
-              
-            const response = await octokit.request('GET /repos/persistenceOne/persistenceWallet/releases', {
-                owner: 'persistenceOne',
-                repo: 'persistenceWallet',
-                headers: {
-                  // 'Accept': 'application/vnd.github.v3+json',
-                  'X-GitHub-Api-Version': '2022-11-28'
-                }
-              })
-            
-              const latestRelease = response.data;
-            
-              return latestRelease;
+  async checkForAppUpdates(appConfig: AppConfig) {
 
-        // Compare the latest IPFS Deployment with the current IPFS Deployment in the database
+    // Check for IPFS Deployment Updates with Github API
+    const checkGithubResultResponse = await this.githubService.checkGithubForRelaseUpdatesUpdates(appConfig);
 
-        // If there is an update, use the Pinata SDK to update the deployment and update the database
+    if (checkGithubResultResponse.hasNewerReleaseAvailable) {
+      const fetchedReleaseData = checkGithubResultResponse.fetchedReleaseData!;
 
-        // If an update was made, update the relevant transform rule on Cloudflare to point to the new IPFS Deployment using the CLoudflare API
+      // If there is an update, use the Pinata SDK to update the deployment and update the database
+      const pinResponse = await this.pinataCloudService.pinNewReleaseToPinata(appConfig, fetchedReleaseData);
+      console.log(pinResponse);
+
+      // If an update was made, update the relevant transform rule on Cloudflare to point to the new IPFS Deployment using the CLoudflare API
+      const transformRule = await this.cloudflareService.updateTransformRule(appConfig, fetchedReleaseData);
+      console.log(transformRule);
+
+      // Send a success message to the Telegram Bot
+      this.internalNotificationsService.sendSuccessMessageToTelegram(appConfig, fetchedReleaseData);
+      const updatedInDB = await this.githubService.saveReleaseDetails(fetchedReleaseData);
+      console.log(updatedInDB);
     }
+  }
 }
