@@ -64,3 +64,5 @@ test/types/index.js
 dist
 
 *.env
+
+utils/config.ts

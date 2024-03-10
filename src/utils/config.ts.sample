@@ -7,7 +7,7 @@ const CONFIGURED_APPS: Array<AppConfig> = [
         appName: "Persistence Wallet",
         repoOwner: "persistenceOne",
         repoName: "persistenceWallet",
-        transformedURL: "https://ipfs.kitkat.zone/test-rule",
+        transformedURL: "https://ipfs.kitkat.zone/pwallet",
         cloudflareRuleExpression: 'starts_with(http.request.full_uri, "https://ipfs.kitkat.zone/test-rule")',
         cloudflareZoneId: "02ede70a2c7f92f4fd4cc6f1d7bcaca5",
         cloudflareRulesetId: "ed8bd75365c4455b877a28add45c0ea5",
