@@ -7,8 +7,8 @@ const CONFIGURED_APPS: Array<AppConfig> = [
         appName: "Persistence Wallet",
         repoOwner: "persistenceOne",
         repoName: "persistenceWallet",
-        transformedURL: "SET_YOUR_OWN",
-        cloudflareRuleExpression: 'starts_with(http.request.full_uri, "SET_YOUR_OWN")',
+        transformedURL: "SET_YOUR_OWN_TRANSFORMED_URL",
+        cloudflareRuleExpression: 'starts_with(http.request.full_uri, "SET_YOUR_OWN_TRANSFORMED_URL")',
         cloudflareZoneId: "SET_YOUR_OWN",
         cloudflareRulesetId: "SET_YOUR_OWN",
         cloudflareRuleId: "SET_YOUR_OWN"
@@ -18,8 +18,8 @@ const CONFIGURED_APPS: Array<AppConfig> = [
         appName: "pStake",
         repoOwner: "persistenceOne",
         repoName: "pstake-frontend-releases",
-        transformedURL: "SET_YOUR_OWN",
-        cloudflareRuleExpression: 'starts_with(http.request.full_uri, "SET_YOUR_OWN")',
+        transformedURL: "SET_YOUR_OWN_TRANSFORMED_URL",
+        cloudflareRuleExpression: 'starts_with(http.request.full_uri, "SET_YOUR_OWN_TRANSFORMED_URL")',
         cloudflareZoneId: "SET_YOUR_OWN",
         cloudflareRulesetId: "SET_YOUR_OWN",
         cloudflareRuleId: "SET_YOUR_OWN"
@@ -29,8 +29,8 @@ const CONFIGURED_APPS: Array<AppConfig> = [
         appName: "Dexter",
         repoOwner: "dexter-zone",
         repoName: "dexter-frontend-releases",
-        transformedURL: "SET_YOUR_OWN",
-        cloudflareRuleExpression: 'starts_with(http.request.full_uri, "SET_YOUR_OWN")',
+        transformedURL: "SET_YOUR_OWN_TRANSFORMED_URL",
+        cloudflareRuleExpression: 'starts_with(http.request.full_uri, "SET_YOUR_OWN_TRANSFORMED_URL")',
         cloudflareZoneId: "SET_YOUR_OWN",
         cloudflareRulesetId: "SET_YOUR_OWN",
         cloudflareRuleId: "SET_YOUR_OWN"
