@@ -16,6 +16,7 @@ The app is a simple Fastify server that runs a cron job every 5 minutes. The cro
 4. [Create a Telegram Bot](https://core.telegram.org/bots/tutorial) for deployment notifications.
     1. Set the `TELEGRAM_BOT_TOKEN` in the `.env` file.
     2. Create a new group, add your new bot to it, make it the group admin. Find out the chat ID of the group by visiting `https://web.telegram.org/a/` and selecting the group. The chat ID will be in the URL, it ususally starts with `-100` for groups that have bot admins. Set the `TELEGRAM_CHAT_ID` in the `.env` file.
-5. Copy the `src/utils/config.sample.ts` file and rename it to `src/utils/config.ts`
+5. [Create a new Cloudflare Transform Rule](https://developers.cloudflare.com/rules/transform/url-rewrite/create-dashboard/) for each of the apps you want to pin. The rules can have any values for now as our application will fix them for us. We just need to do this for the Rule ID to be available in the next step.
+6. Copy the `src/utils/config.sample.ts` file and rename it to `src/utils/config.ts`
     1. Add the `appUUID`, `transformedURL`, `transformedURL` inside `cloudflareRuleExpression`, `cloudflareZoneId`, `cloudflareRulesetId` and `cloudflareRuleId` for each of the apps. You can obtain the `cloudflareZoneId` by following the instructions in the [Cloudflare documentation](https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/). The `cloudflareRulesetId` and `cloudflareRuleId` can be obtained by following the instructions on [this page](https://developers.cloudflare.com/ruleset-engine/rulesets-api/view/).
-6. Deploy with a method of your choice, just like any backend application, Dockerfile is included.
+7. Deploy with a method of your choice, just like any backend application, Dockerfile is included.
